@@ -1,0 +1,65 @@
+options {
+  STATIC = false;
+}
+
+PARSER_BEGIN(clase_6)
+public class clase_6 {
+  public static void main(String[] args) throws Exception {
+    java.util.Scanner sc = new java.util.Scanner(System.in);
+    while (sc.hasNextLine()) {
+      String linea = sc.nextLine().trim();
+      if (linea.isEmpty()) continue;
+      System.out.print(linea + " -> ");
+      try {
+        clase_6 parser = new clase_6(new java.io.StringReader(linea));
+        parser.For();
+        System.out.println("VALIDO");
+      } catch (ParseException e) {
+        System.out.println("INVALIDO");
+      } catch (TokenMgrError e) {
+        System.out.println("INVALIDO");
+      }
+    }
+  }
+}
+PARSER_END(clase_6)
+
+SKIP : { " " | "\t" | "\n" | "\r" }
+
+TOKEN : { < FOR    : "for" > }
+TOKEN : { < LPAREN : "(" > }
+TOKEN : { < RPAREN : ")" > }
+TOKEN : { < COMA   : "," > }
+TOKEN : { < MAS    : "+" > }
+TOKEN : { < NUMERO : (["0"-"9"])+ > }
+TOKEN : { < ID     : (["a"-"z","A"-"Z"])+ > }
+
+// <for> ::= FOR ( <argumentos> )
+void For() :
+{}
+{
+  <FOR> <LPAREN> argumentos() <RPAREN> <EOF>
+}
+
+// <argumentos> ::= <fin>
+//               | <inicio> , <fin>
+//               | <inicio> , <fin> , <incremento>
+void argumentos() :
+{}
+{
+  expresion() ( <COMA> expresion() ( <COMA> expresion() )? )?
+}
+
+// <expresion> ::= <termino> (+ <expresion>)*
+void expresion() :
+{}
+{
+  termino() ( <MAS> termino() )*
+}
+
+// <termino> ::= <numero> | <id>
+void termino() :
+{}
+{
+  <NUMERO> | <ID>
+}
