@@ -1,0 +1,50 @@
+PARSER_BEGIN(Calculadora)
+
+public class Calculadora {
+public static void main(String args[]) throws ParseException {
+Calculadora parser = new Calculadora(System.in);
+System.out.println("Ingresa una expresión (ej: 3+5*2):");
+parser.Inicio();
+System.out.println("Expresión válida.");
+}
+}
+
+PARSER_END(Calculadora)
+
+// Ignorar espacios
+SKIP : {
+" " | "\t" | "\n" | "\r"
+}
+
+// Tokens
+TOKEN : {
+< PLUS: "+" >
+|   < MINUS: "-" >
+|   < MULT: "*" >
+|   < DIV: "/" >
+|   < LPAREN: "(" >
+|   < RPAREN: ")" >
+|   < NUM: (["0"-"9"])+ >
+}
+
+// Gramática
+void Inicio() : {}
+{
+Expresion()
+}
+
+void Expresion() : {}
+{
+Termino() ( ( <PLUS> | <MINUS> ) Termino() )*
+}
+
+void Termino() : {}
+{
+Factor() ( ( <MULT> | <DIV> ) Factor() )*
+}
+
+void Factor() : {}
+{ <NUM>
+|   <LPAREN> Expresion() <RPAREN>
+}
+
