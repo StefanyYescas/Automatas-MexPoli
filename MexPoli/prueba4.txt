@@ -1,0 +1,13 @@
+programa {
+  inicio {
+    16d x = 5;
+  }
+
+  >> x;
+  << x;
+  reducir(x);
+  evaluar(x);
+  expandir(x);
+  factorizar(x);
+  ordenar(x);
+}

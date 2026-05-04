@@ -1,0 +1,9 @@
+programa {
+  inicio {
+    16d x = 0;
+  }
+
+  while (x < 5) {
+    x = x + 1;
+  }
+}

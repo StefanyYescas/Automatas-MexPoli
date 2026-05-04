@@ -1,0 +1,10 @@
+programa {
+  inicio {
+    16d x = 5;
+    16d y = 10;
+  }
+
+  if (x < y && y > 5 || x == 5) {
+    << x;
+  }
+}

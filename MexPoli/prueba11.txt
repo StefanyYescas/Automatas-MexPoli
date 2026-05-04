@@ -1,0 +1,5 @@
+programa {
+  inicio {
+    16d X = 5;
+  }
+}

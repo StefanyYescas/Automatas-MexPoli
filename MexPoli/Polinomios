@@ -1,0 +1,234 @@
+options {
+  STATIC = false;
+}
+
+PARSER_BEGIN(Polinomios)
+
+public class Polinomios {
+  public static void main(String[] args) throws ParseException {
+    Polinomios parser = new Polinomios(System.in);
+    parser.programa();
+    System.out.println("Programa sintácticamente correcto ✅");
+  }
+}
+
+PARSER_END(Polinomios)
+
+
+//  ESPACIOS
+SKIP : {
+  " " | "\t" | "\n" | "\r"
+}
+
+
+//  TOKENS
+TOKEN : {
+    < PROGRAMA: "programa" >
+  | < INICIO: "inicio" >
+  | < IF: "if" >
+  | < ELIF: "elif" >
+  | < ELSE: "else" >
+  | < WHILE: "while" >
+  | < RETURN: "return" >
+  | < STOP: "stop" >
+
+  | < REDUCIR: "reducir" >
+  | < EVALUAR: "evaluar" >
+  | < EXPANDIR: "expandir" >
+  | < FACTORIZAR: "factorizar" >
+  | < ORDENAR: "ordenar" >
+
+  | < LEER: ">>" >
+  | < IMPRIMIR: "<<" >
+
+  | < TRUE: "true" >
+  | < FALSE: "false" >
+
+  | < TIPO: "8b" | "16s" | "16d" | "16c" | "1b" >
+
+  | < ID: ["a"-"z"] (["a"-"z","0"-"9"])* >
+  | < NUM: (["0"-"9"])+ >
+
+  | < MAS: "+" >
+  | < MENOS: "-" >
+  | < MUL: "*" >
+  | < DIV: "/" >
+  | < POT: "^" >
+
+  | < AND: "&&" >
+  | < OR: "||" >
+  | < NOT: "!" >
+
+  | < MAYOR: ">" >
+  | < MENOR: "<" >
+  | < MAYORIG: ">=" >
+  | < MENORIG: "<=" >
+  | < IGUAL: "==" >
+  | < DIF: "!=" >
+
+  | < ASIG: "=" >
+
+  | < PYC: ";" >
+  | < PAR_A: "(" >
+  | < PAR_C: ")" >
+  | < LLAVE_A: "{" >
+  | < LLAVE_C: "}" >
+}
+
+
+//  PARSER
+
+void programa() :
+{}
+{
+  <PROGRAMA> <LLAVE_A> inicio() instrucciones() <LLAVE_C>
+}
+
+void inicio() :
+{}
+{
+  <INICIO> <LLAVE_A> declaraciones() <LLAVE_C>
+}
+
+void bloque() :
+{}
+{
+  <LLAVE_A> instrucciones() <LLAVE_C>
+}
+
+void declaraciones() :
+{}
+{
+  ( <TIPO> <ID> ( <ASIG> expresion() )? <PYC> )*
+}
+
+void instrucciones() :
+{}
+{
+  ( instruccion() )*
+}
+
+void instruccion() :
+{}
+{
+    asignacion()
+  | funcion()
+  | condicional()
+  | ciclo()
+  | retorno()
+}
+
+void asignacion() :
+{}
+{
+  <ID> <ASIG> expresion() <PYC>
+}
+
+
+//  EXPRESIONES
+
+void expresion() :
+{}
+{
+  exp_or()
+}
+
+void exp_or() :
+{}
+{
+  exp_and() ( <OR> exp_and() )*
+}
+
+void exp_and() :
+{}
+{
+  exp_rel() ( <AND> exp_rel() )*
+}
+
+void exp_rel() :
+{}
+{
+  exp_arit() ( ( <MAYOR> | <MENOR> | <MAYORIG> | <MENORIG> | <IGUAL> | <DIF> ) exp_arit() )?
+}
+
+void exp_arit() :
+{}
+{
+  termino() ( ( <MAS> | <MENOS> ) termino() )*
+}
+
+void termino() :
+{}
+{
+  potencia() ( ( <MUL> | <DIV> ) potencia() )*
+}
+
+void potencia() :
+{}
+{
+  factor() ( <POT> factor() )*
+}
+
+
+//  FACTOR CON SOPORTE A POLINOMIOS
+
+void factor() :
+{}
+{
+    polinomio()
+  | <TRUE>
+  | <FALSE>
+  | <PAR_A> expresion() <PAR_C>
+  | <NOT> factor()
+}
+
+
+//  POLINOMIOS
+
+void polinomio() :
+{}
+{
+    LOOKAHEAD(3) <NUM> <ID> <POT> <NUM>   // 3x^2
+  | LOOKAHEAD(2) <NUM> <ID>               // 3x
+  | LOOKAHEAD(2) <ID> <POT> <NUM>         // x^2
+  | <ID>                                  // x
+  | <NUM>                                 // 5
+}
+
+//  FUNCIONES
+
+void funcion() :
+{}
+{
+    <LEER> <ID> <PYC>
+  | <IMPRIMIR> <ID> <PYC>
+  | <REDUCIR> <PAR_A> <ID> <PAR_C> <PYC>
+  | <EVALUAR> <PAR_A> <ID> <PAR_C> <PYC>
+  | <EXPANDIR> <PAR_A> <ID> <PAR_C> <PYC>
+  | <FACTORIZAR> <PAR_A> <ID> <PAR_C> <PYC>
+  | <ORDENAR> <PAR_A> <ID> <PAR_C> <PYC>
+}
+
+
+//  CONTROL
+
+void condicional() :
+{}
+{
+  <IF> <PAR_A> expresion() <PAR_C> bloque()
+  ( <ELIF> <PAR_A> expresion() <PAR_C> bloque() )*
+  ( <ELSE> bloque() )?
+}
+
+void ciclo() :
+{}
+{
+  <WHILE> <PAR_A> expresion() <PAR_C> bloque()
+}
+
+void retorno() :
+{}
+{
+    <RETURN> expresion() <PYC>
+  | <STOP> <PYC>
+}
