@@ -1,0 +1,21 @@
+programa {
+  inicio {
+    16d x;
+  }
+
+  >> x;
+
+  x = 3x^2 + 2x + 1;
+
+  if (x > 10) {
+    reducir(x);
+  } else {
+    ordenar(x);
+  }
+
+  while (x < 50) {
+    x = x + 5;
+  }
+
+  << x;
+}
