@@ -1,7 +1,7 @@
 programa {
   inicio {
-    16d x = 10;
+    16d x;
   }
 
-  x = 3 + 5 * 2 ^ 2 - 4 / 2;
+  x = x;
 }

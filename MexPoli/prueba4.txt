@@ -1,13 +1,8 @@
 programa {
   inicio {
-    16d x = 5;
+    16d x;
   }
 
-  >> x;
-  << x;
-  reducir(x);
-  evaluar(x);
-  expandir(x);
-  factorizar(x);
-  ordenar(x);
+  x = x^2;
 }
+

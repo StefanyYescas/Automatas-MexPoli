@@ -15,13 +15,13 @@ public class Polinomios {
 PARSER_END(Polinomios)
 
 
-//  ESPACIOS
+// ESPACIOS
 SKIP : {
   " " | "\t" | "\n" | "\r"
 }
 
 
-//  TOKENS
+// TOKENS
 TOKEN : {
     < PROGRAMA: "programa" >
   | < INICIO: "inicio" >
@@ -76,7 +76,7 @@ TOKEN : {
 }
 
 
-//  PARSER
+// PARSER
 
 void programa() :
 {}
@@ -125,7 +125,7 @@ void asignacion() :
 }
 
 
-//  EXPRESIONES
+// EXPRESIONES
 
 void expresion() :
 {}
@@ -157,34 +157,25 @@ void exp_arit() :
   termino() ( ( <MAS> | <MENOS> ) termino() )*
 }
 
+
+//  CLAVE: AQUÍ SE RECONOCEN LOS POLINOMIOS
 void termino() :
 {}
 {
-  potencia() ( ( <MUL> | <DIV> ) potencia() )*
+  factor() ( ( <MUL> | <DIV> ) factor() )*
 }
-
-void potencia() :
-{}
-{
-  factor() ( <POT> factor() )*
-}
-
-
-//  FACTOR CON SOPORTE A POLINOMIOS
 
 void factor() :
 {}
 {
-    polinomio()
-  | <TRUE>
-  | <FALSE>
+    LOOKAHEAD(3) polinomio()
   | <PAR_A> expresion() <PAR_C>
   | <NOT> factor()
-}
+  | <TRUE>
+  | <FALSE>
+}                                                                                   
 
-
-//  POLINOMIOS
-
+//  POLINOMIOS (SIN AMBIGÜEDAD)
 void polinomio() :
 {}
 {
@@ -195,7 +186,8 @@ void polinomio() :
   | <NUM>                                 // 5
 }
 
-//  FUNCIONES
+
+// FUNCIONES
 
 void funcion() :
 {}
@@ -210,7 +202,7 @@ void funcion() :
 }
 
 
-//  CONTROL
+// CONTROL
 
 void condicional() :
 {}

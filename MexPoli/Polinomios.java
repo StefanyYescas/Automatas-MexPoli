@@ -7,7 +7,7 @@ public class Polinomios implements PolinomiosConstants {
     System.out.println("Programa sint\u00e1cticamente correcto \u2705");
   }
 
-//  PARSER
+// PARSER
   final public 
 void programa() throws ParseException {
     jj_consume_token(PROGRAMA);
@@ -128,7 +128,7 @@ void programa() throws ParseException {
     jj_consume_token(PYC);
 }
 
-//  EXPRESIONES
+// EXPRESIONES
   final public 
 void expresion() throws ParseException {
     exp_or();
@@ -250,8 +250,9 @@ void expresion() throws ParseException {
     }
 }
 
+//  CLAVE: AQUÍ SE RECONOCEN LOS POLINOMIOS
   final public void termino() throws ParseException {
-    potencia();
+    factor();
     label_6:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -278,75 +279,53 @@ void expresion() throws ParseException {
         jj_consume_token(-1);
         throw new ParseException();
       }
-      potencia();
+      factor();
     }
 }
 
-  final public void potencia() throws ParseException {
-    factor();
-    label_7:
-    while (true) {
+  final public void factor() throws ParseException {
+    if (jj_2_1(3)) {
+      polinomio();
+    } else {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case POT:{
-        ;
+      case PAR_A:{
+        jj_consume_token(PAR_A);
+        expresion();
+        jj_consume_token(PAR_C);
+        break;
+        }
+      case NOT:{
+        jj_consume_token(NOT);
+        factor();
+        break;
+        }
+      case TRUE:{
+        jj_consume_token(TRUE);
+        break;
+        }
+      case FALSE:{
+        jj_consume_token(FALSE);
         break;
         }
       default:
         jj_la1[12] = jj_gen;
-        break label_7;
+        jj_consume_token(-1);
+        throw new ParseException();
       }
-      jj_consume_token(POT);
-      factor();
     }
 }
 
-//  FACTOR CON SOPORTE A POLINOMIOS
-  final public 
-void factor() throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case ID:
-    case NUM:{
-      polinomio();
-      break;
-      }
-    case TRUE:{
-      jj_consume_token(TRUE);
-      break;
-      }
-    case FALSE:{
-      jj_consume_token(FALSE);
-      break;
-      }
-    case PAR_A:{
-      jj_consume_token(PAR_A);
-      expresion();
-      jj_consume_token(PAR_C);
-      break;
-      }
-    case NOT:{
-      jj_consume_token(NOT);
-      factor();
-      break;
-      }
-    default:
-      jj_la1[13] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-}
-
-//  POLINOMIOS
-  final public 
-void polinomio() throws ParseException {
-    if (jj_2_1(3)) {
+//  POLINOMIOS (SIN AMBIGÜEDAD)
+  final public void polinomio() throws ParseException {
+    if (jj_2_2(3)) {
       jj_consume_token(NUM);
       jj_consume_token(ID);
       jj_consume_token(POT);
       jj_consume_token(NUM);
-    } else if (jj_2_2(2)) {
-      jj_consume_token(NUM);
-      jj_consume_token(ID);
     } else if (jj_2_3(2)) {
+      jj_consume_token(NUM);
+      jj_consume_token(ID);
+    } else if (jj_2_4(2)) {
       jj_consume_token(ID);
       jj_consume_token(POT);
       jj_consume_token(NUM);
@@ -361,14 +340,14 @@ void polinomio() throws ParseException {
         break;
         }
       default:
-        jj_la1[14] = jj_gen;
+        jj_la1[13] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
     }
 }
 
-//  FUNCIONES
+// FUNCIONES
   final public 
 void funcion() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -425,13 +404,13 @@ void funcion() throws ParseException {
       break;
       }
     default:
-      jj_la1[15] = jj_gen;
+      jj_la1[14] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
 }
 
-//  CONTROL
+// CONTROL
   final public 
 void condicional() throws ParseException {
     jj_consume_token(IF);
@@ -439,7 +418,7 @@ void condicional() throws ParseException {
     expresion();
     jj_consume_token(PAR_C);
     bloque();
-    label_8:
+    label_7:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case ELIF:{
@@ -447,8 +426,8 @@ void condicional() throws ParseException {
         break;
         }
       default:
-        jj_la1[16] = jj_gen;
-        break label_8;
+        jj_la1[15] = jj_gen;
+        break label_7;
       }
       jj_consume_token(ELIF);
       jj_consume_token(PAR_A);
@@ -463,7 +442,7 @@ void condicional() throws ParseException {
       break;
       }
     default:
-      jj_la1[17] = jj_gen;
+      jj_la1[16] = jj_gen;
       ;
     }
 }
@@ -490,7 +469,7 @@ void condicional() throws ParseException {
       break;
       }
     default:
-      jj_la1[18] = jj_gen;
+      jj_la1[17] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -520,25 +499,60 @@ void condicional() throws ParseException {
     finally { jj_save(2, xla); }
   }
 
-  private boolean jj_3_2()
+  private boolean jj_2_4(int xla)
  {
-    if (jj_scan_token(NUM)) return true;
-    if (jj_scan_token(ID)) return true;
-    return false;
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_4()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(3, xla); }
   }
 
-  private boolean jj_3_1()
+  private boolean jj_3_4()
  {
-    if (jj_scan_token(NUM)) return true;
     if (jj_scan_token(ID)) return true;
     if (jj_scan_token(POT)) return true;
+    if (jj_scan_token(NUM)) return true;
     return false;
   }
 
   private boolean jj_3_3()
  {
+    if (jj_scan_token(NUM)) return true;
+    if (jj_scan_token(ID)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_polinomio_182_5_8()
+ {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_2()) {
+    jj_scanpos = xsp;
+    if (jj_3_3()) {
+    jj_scanpos = xsp;
+    if (jj_3_4()) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(23)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(24)) return true;
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3_2()
+ {
+    if (jj_scan_token(NUM)) return true;
     if (jj_scan_token(ID)) return true;
     if (jj_scan_token(POT)) return true;
+    return false;
+  }
+
+  private boolean jj_3_1()
+ {
+    if (jj_3R_polinomio_182_5_8()) return true;
     return false;
   }
 
@@ -553,7 +567,7 @@ void condicional() throws ParseException {
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
   private int jj_gen;
-  final private int[] jj_la1 = new int[19];
+  final private int[] jj_la1 = new int[18];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -561,12 +575,12 @@ void condicional() throws ParseException {
 	   jj_la1_init_1();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x400000,0x0,0x8ffc80,0x8ffc80,0x80000000,0x40000000,0x0,0x0,0x6000000,0x6000000,0x18000000,0x18000000,0x20000000,0x1b00000,0x1800000,0xfe000,0x100,0x200,0x1800,};
+	   jj_la1_0 = new int[] {0x400000,0x0,0x8ffc80,0x8ffc80,0x80000000,0x40000000,0x0,0x0,0x6000000,0x6000000,0x18000000,0x18000000,0x300000,0x1800000,0xfe000,0x100,0x200,0x1800,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x0,0x80,0x0,0x0,0x0,0x0,0x7e,0x7e,0x0,0x0,0x0,0x0,0x0,0x201,0x0,0x0,0x0,0x0,0x0,};
+	   jj_la1_1 = new int[] {0x0,0x80,0x0,0x0,0x0,0x0,0x7e,0x7e,0x0,0x0,0x0,0x0,0x201,0x0,0x0,0x0,0x0,0x0,};
 	}
-  final private JJCalls[] jj_2_rtns = new JJCalls[3];
+  final private JJCalls[] jj_2_rtns = new JJCalls[4];
   private boolean jj_rescan = false;
   private int jj_gc = 0;
 
@@ -581,7 +595,7 @@ void condicional() throws ParseException {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 19; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 18; i++) jj_la1[i] = -1;
 	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -596,7 +610,7 @@ void condicional() throws ParseException {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 19; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 18; i++) jj_la1[i] = -1;
 	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -607,7 +621,7 @@ void condicional() throws ParseException {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 19; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 18; i++) jj_la1[i] = -1;
 	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -626,7 +640,7 @@ void condicional() throws ParseException {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 19; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 18; i++) jj_la1[i] = -1;
 	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -636,7 +650,7 @@ void condicional() throws ParseException {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 19; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 18; i++) jj_la1[i] = -1;
 	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -646,7 +660,7 @@ void condicional() throws ParseException {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 19; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 18; i++) jj_la1[i] = -1;
 	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -782,7 +796,7 @@ void condicional() throws ParseException {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
 	 }
-	 for (int i = 0; i < 19; i++) {
+	 for (int i = 0; i < 18; i++) {
 	   if (jj_la1[i] == jj_gen) {
 		 for (int j = 0; j < 32; j++) {
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -828,7 +842,7 @@ void condicional() throws ParseException {
 
   private void jj_rescan_token() {
 	 jj_rescan = true;
-	 for (int i = 0; i < 3; i++) {
+	 for (int i = 0; i < 4; i++) {
 	   try {
 		 JJCalls p = jj_2_rtns[i];
 
@@ -839,6 +853,7 @@ void condicional() throws ParseException {
 			   case 0: jj_3_1(); break;
 			   case 1: jj_3_2(); break;
 			   case 2: jj_3_3(); break;
+			   case 3: jj_3_4(); break;
 			 }
 		   }
 		   p = p.next;

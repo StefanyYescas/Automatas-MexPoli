@@ -1,9 +1,9 @@
-tprograma {
+programa {
   inicio {
-    16d x = 5;
+    16d x;
   }
 
-  if x > 5 {
-    << x;
+  while (x < 10) {
+    x = x + 1;
   }
 }

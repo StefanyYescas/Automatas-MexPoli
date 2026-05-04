@@ -1,9 +1,7 @@
 programa {
   inicio {
-    16d x = 0;
+    16d x;
   }
 
-  while (x < 5) {
-    x = x + 1;
-  }
+  x = 3x^2 + 4x - 5;
 }
