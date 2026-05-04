@@ -1,0 +1,15 @@
+programa {
+  inicio {
+    16d x;
+  }
+
+  while (x < 100) {
+    if ((x^2 + 2x) > 50) {
+      reducir(x);
+    } else {
+      x = (x + 1) * (x + 2);
+    }
+  }
+
+  << x;
+}

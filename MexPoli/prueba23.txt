@@ -1,0 +1,13 @@
+programa {
+  inicio {
+    16d x;
+  }
+
+  x = 3x^2 + 6x + 3;
+
+  reducir(x);
+  factorizar(x);
+  ordenar(x);
+
+  << x;
+}
