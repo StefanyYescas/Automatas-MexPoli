@@ -1,0 +1,9 @@
+
+programa {
+  inicio {
+    16d x;
+  }
+
+  x = 3x;
+}
+

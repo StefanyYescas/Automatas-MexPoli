@@ -1,0 +1,12 @@
+programa {
+  inicio {
+    16d x;
+  }
+
+  if (3x^2 > 2x) {
+    << x;
+  } else {
+    >> x;
+  }
+}
+
