@@ -1,0 +1,15 @@
+programa {
+  inicio {
+    8b x;
+  }
+
+  x = 2x + 3x;
+
+  reducir(2x + 3x);
+  expandir((x+1)(x+2));
+  factorizar(x^2 + 3x + 2);
+  ordenar(3 + x^2 + 2x);
+  evaluar(2 + 3 * 4);
+
+  << x;
+}
