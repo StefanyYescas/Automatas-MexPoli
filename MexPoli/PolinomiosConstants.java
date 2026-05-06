@@ -65,17 +65,17 @@ public interface PolinomiosConstants {
   /** RegularExpression Id. */
   int NOT = 32;
   /** RegularExpression Id. */
-  int MAYOR = 33;
+  int MAYORIG = 33;
   /** RegularExpression Id. */
-  int MENOR = 34;
+  int MENORIG = 34;
   /** RegularExpression Id. */
-  int MAYORIG = 35;
+  int IGUAL = 35;
   /** RegularExpression Id. */
-  int MENORIG = 36;
+  int DIF = 36;
   /** RegularExpression Id. */
-  int IGUAL = 37;
+  int MAYOR = 37;
   /** RegularExpression Id. */
-  int DIF = 38;
+  int MENOR = 38;
   /** RegularExpression Id. */
   int ASIG = 39;
   /** RegularExpression Id. */
@@ -127,12 +127,12 @@ public interface PolinomiosConstants {
     "\"&&\"",
     "\"||\"",
     "\"!\"",
-    "\">\"",
-    "\"<\"",
     "\">=\"",
     "\"<=\"",
     "\"==\"",
     "\"!=\"",
+    "\">\"",
+    "\"<\"",
     "\"=\"",
     "\";\"",
     "\"(\"",

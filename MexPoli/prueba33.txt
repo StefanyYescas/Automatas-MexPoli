@@ -1,0 +1,20 @@
+programa {
+inicio {
+  8b x = 2;
+}
+
+x = (x + 2)(x + 3);
+
+expandir(x);
+reducir(x);
+ordenar(x);
+
+factorizar(x);
+
+evaluar(x);
+
+<< x;
+
+return x;
+}
+
