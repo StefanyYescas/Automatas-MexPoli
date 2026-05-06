@@ -1,0 +1,5 @@
+programa {
+inicio {
+}
+x = 3x(2x + 5);
+}

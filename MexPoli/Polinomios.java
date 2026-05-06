@@ -7,8 +7,8 @@ public class Polinomios implements PolinomiosConstants {
     System.out.println("Programa sint\u00e1cticamente correcto \u2705");
   }
 
-// PARSER
-  final public 
+// ================= PARSER =================
+  static final public 
 void programa() throws ParseException {
     jj_consume_token(PROGRAMA);
     jj_consume_token(LLAVE_A);
@@ -17,20 +17,20 @@ void programa() throws ParseException {
     jj_consume_token(LLAVE_C);
 }
 
-  final public void inicio() throws ParseException {
+  static final public void inicio() throws ParseException {
     jj_consume_token(INICIO);
     jj_consume_token(LLAVE_A);
     declaraciones();
     jj_consume_token(LLAVE_C);
 }
 
-  final public void bloque() throws ParseException {
+  static final public void bloque() throws ParseException {
     jj_consume_token(LLAVE_A);
     instrucciones();
     jj_consume_token(LLAVE_C);
 }
 
-  final public void declaraciones() throws ParseException {
+  static final public void declaraciones() throws ParseException {
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -58,7 +58,7 @@ void programa() throws ParseException {
     }
 }
 
-  final public void instrucciones() throws ParseException {
+  static final public void instrucciones() throws ParseException {
     label_2:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -85,7 +85,7 @@ void programa() throws ParseException {
     }
 }
 
-  final public void instruccion() throws ParseException {
+  static final public void instruccion() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case ID:{
       asignacion();
@@ -121,20 +121,20 @@ void programa() throws ParseException {
     }
 }
 
-  final public void asignacion() throws ParseException {
+  static final public void asignacion() throws ParseException {
     jj_consume_token(ID);
     jj_consume_token(ASIG);
     expresion();
     jj_consume_token(PYC);
 }
 
-// EXPRESIONES
-  final public 
+// ================= EXPRESIONES =================
+  static final public 
 void expresion() throws ParseException {
     exp_or();
 }
 
-  final public void exp_or() throws ParseException {
+  static final public void exp_or() throws ParseException {
     exp_and();
     label_3:
     while (true) {
@@ -152,7 +152,7 @@ void expresion() throws ParseException {
     }
 }
 
-  final public void exp_and() throws ParseException {
+  static final public void exp_and() throws ParseException {
     exp_rel();
     label_4:
     while (true) {
@@ -170,15 +170,15 @@ void expresion() throws ParseException {
     }
 }
 
-  final public void exp_rel() throws ParseException {
+  static final public void exp_rel() throws ParseException {
     exp_arit();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case MAYOR:
-    case MENOR:
     case MAYORIG:
     case MENORIG:
     case IGUAL:
-    case DIF:{
+    case DIF:
+    case MAYOR:
+    case MENOR:{
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case MAYOR:{
         jj_consume_token(MAYOR);
@@ -218,7 +218,7 @@ void expresion() throws ParseException {
     }
 }
 
-  final public void exp_arit() throws ParseException {
+  static final public void exp_arit() throws ParseException {
     termino();
     label_5:
     while (true) {
@@ -250,9 +250,9 @@ void expresion() throws ParseException {
     }
 }
 
-//  CLAVE: AQUÍ SE RECONOCEN LOS POLINOMIOS
-  final public void termino() throws ParseException {
-    factor();
+//  NUEVO DISEÑO DE MULTIPLICACIÓN
+  static final public void termino() throws ParseException {
+    factorMultiplicativo();
     label_6:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -279,44 +279,97 @@ void expresion() throws ParseException {
         jj_consume_token(-1);
         throw new ParseException();
       }
-      factor();
+      factorMultiplicativo();
     }
 }
 
-  final public void factor() throws ParseException {
-    if (jj_2_1(3)) {
-      polinomio();
-    } else {
+// SOPORTA: 2x(x+1)(x+2)(x+3)
+  static final public void factorMultiplicativo() throws ParseException {
+    potencia();
+    label_7:
+    while (true) {
+      if (jj_2_1(2)) {
+        ;
+      } else {
+        break label_7;
+      }
+      potencia();
+    }
+}
+
+//  POTENCIAS
+  static final public void potencia() throws ParseException {
+    unario();
+    label_8:
+    while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case PAR_A:{
-        jj_consume_token(PAR_A);
-        expresion();
-        jj_consume_token(PAR_C);
-        break;
-        }
-      case NOT:{
-        jj_consume_token(NOT);
-        factor();
-        break;
-        }
-      case TRUE:{
-        jj_consume_token(TRUE);
-        break;
-        }
-      case FALSE:{
-        jj_consume_token(FALSE);
+      case POT:{
+        ;
         break;
         }
       default:
         jj_la1[12] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
+        break label_8;
       }
+      jj_consume_token(POT);
+      unario();
     }
 }
 
-//  POLINOMIOS (SIN AMBIGÜEDAD)
-  final public void polinomio() throws ParseException {
+//  NEGATIVOS
+  static final public void unario() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case MENOS:{
+      jj_consume_token(MENOS);
+      unario();
+      break;
+      }
+    case TRUE:
+    case FALSE:
+    case ID:
+    case NUM:
+    case PAR_A:{
+      primario();
+      break;
+      }
+    default:
+      jj_la1[13] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+}
+
+//  PRIMARIO
+  static final public void primario() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case PAR_A:{
+      jj_consume_token(PAR_A);
+      expresion();
+      jj_consume_token(PAR_C);
+      break;
+      }
+    case ID:
+    case NUM:{
+      polinomio();
+      break;
+      }
+    case TRUE:{
+      jj_consume_token(TRUE);
+      break;
+      }
+    case FALSE:{
+      jj_consume_token(FALSE);
+      break;
+      }
+    default:
+      jj_la1[14] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+}
+
+//  POLINOMIOS
+  static final public void polinomio() throws ParseException {
     if (jj_2_2(3)) {
       jj_consume_token(NUM);
       jj_consume_token(ID);
@@ -325,7 +378,7 @@ void expresion() throws ParseException {
     } else if (jj_2_3(2)) {
       jj_consume_token(NUM);
       jj_consume_token(ID);
-    } else if (jj_2_4(2)) {
+    } else if (jj_2_4(3)) {
       jj_consume_token(ID);
       jj_consume_token(POT);
       jj_consume_token(NUM);
@@ -340,15 +393,15 @@ void expresion() throws ParseException {
         break;
         }
       default:
-        jj_la1[13] = jj_gen;
+        jj_la1[15] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
     }
 }
 
-// FUNCIONES
-  final public 
+// ================= FUNCIONES =================
+  static final public 
 void funcion() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case LEER:{
@@ -359,14 +412,14 @@ void funcion() throws ParseException {
       }
     case IMPRIMIR:{
       jj_consume_token(IMPRIMIR);
-      jj_consume_token(ID);
+      expresion();
       jj_consume_token(PYC);
       break;
       }
     case REDUCIR:{
       jj_consume_token(REDUCIR);
       jj_consume_token(PAR_A);
-      jj_consume_token(ID);
+      expresion();
       jj_consume_token(PAR_C);
       jj_consume_token(PYC);
       break;
@@ -374,7 +427,7 @@ void funcion() throws ParseException {
     case EVALUAR:{
       jj_consume_token(EVALUAR);
       jj_consume_token(PAR_A);
-      jj_consume_token(ID);
+      expresion();
       jj_consume_token(PAR_C);
       jj_consume_token(PYC);
       break;
@@ -382,7 +435,7 @@ void funcion() throws ParseException {
     case EXPANDIR:{
       jj_consume_token(EXPANDIR);
       jj_consume_token(PAR_A);
-      jj_consume_token(ID);
+      expresion();
       jj_consume_token(PAR_C);
       jj_consume_token(PYC);
       break;
@@ -390,7 +443,7 @@ void funcion() throws ParseException {
     case FACTORIZAR:{
       jj_consume_token(FACTORIZAR);
       jj_consume_token(PAR_A);
-      jj_consume_token(ID);
+      expresion();
       jj_consume_token(PAR_C);
       jj_consume_token(PYC);
       break;
@@ -398,27 +451,27 @@ void funcion() throws ParseException {
     case ORDENAR:{
       jj_consume_token(ORDENAR);
       jj_consume_token(PAR_A);
-      jj_consume_token(ID);
+      expresion();
       jj_consume_token(PAR_C);
       jj_consume_token(PYC);
       break;
       }
     default:
-      jj_la1[14] = jj_gen;
+      jj_la1[16] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
 }
 
-// CONTROL
-  final public 
+// ================= CONTROL =================
+  static final public 
 void condicional() throws ParseException {
     jj_consume_token(IF);
     jj_consume_token(PAR_A);
     expresion();
     jj_consume_token(PAR_C);
     bloque();
-    label_7:
+    label_9:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case ELIF:{
@@ -426,8 +479,8 @@ void condicional() throws ParseException {
         break;
         }
       default:
-        jj_la1[15] = jj_gen;
-        break label_7;
+        jj_la1[17] = jj_gen;
+        break label_9;
       }
       jj_consume_token(ELIF);
       jj_consume_token(PAR_A);
@@ -442,12 +495,12 @@ void condicional() throws ParseException {
       break;
       }
     default:
-      jj_la1[16] = jj_gen;
+      jj_la1[18] = jj_gen;
       ;
     }
 }
 
-  final public void ciclo() throws ParseException {
+  static final public void ciclo() throws ParseException {
     jj_consume_token(WHILE);
     jj_consume_token(PAR_A);
     expresion();
@@ -455,7 +508,7 @@ void condicional() throws ParseException {
     bloque();
 }
 
-  final public void retorno() throws ParseException {
+  static final public void retorno() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case RETURN:{
       jj_consume_token(RETURN);
@@ -469,13 +522,13 @@ void condicional() throws ParseException {
       break;
       }
     default:
-      jj_la1[17] = jj_gen;
+      jj_la1[19] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
 }
 
-  private boolean jj_2_1(int xla)
+  static private boolean jj_2_1(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_1()); }
@@ -483,7 +536,7 @@ void condicional() throws ParseException {
     finally { jj_save(0, xla); }
   }
 
-  private boolean jj_2_2(int xla)
+  static private boolean jj_2_2(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_2()); }
@@ -491,7 +544,7 @@ void condicional() throws ParseException {
     finally { jj_save(1, xla); }
   }
 
-  private boolean jj_2_3(int xla)
+  static private boolean jj_2_3(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_3()); }
@@ -499,7 +552,7 @@ void condicional() throws ParseException {
     finally { jj_save(2, xla); }
   }
 
-  private boolean jj_2_4(int xla)
+  static private boolean jj_2_4(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_4()); }
@@ -507,7 +560,42 @@ void condicional() throws ParseException {
     finally { jj_save(3, xla); }
   }
 
-  private boolean jj_3_4()
+  static private boolean jj_3R_exp_or_136_3_20()
+ {
+    if (jj_3R_exp_and_142_3_21()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_1()
+ {
+    if (jj_3R_potencia_178_3_10()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_potencia_178_3_10()
+ {
+    if (jj_3R_unario_186_5_11()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_potencia_178_14_12()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_expresion_130_3_18()
+ {
+    if (jj_3R_exp_or_136_3_20()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_factorMultiplicativo_170_3_25()
+ {
+    if (jj_3R_potencia_178_3_10()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_4()
  {
     if (jj_scan_token(ID)) return true;
     if (jj_scan_token(POT)) return true;
@@ -515,14 +603,28 @@ void condicional() throws ParseException {
     return false;
   }
 
-  private boolean jj_3_3()
+  static private boolean jj_3R_termino_162_3_24()
+ {
+    if (jj_3R_factorMultiplicativo_170_3_25()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_3()
  {
     if (jj_scan_token(NUM)) return true;
     if (jj_scan_token(ID)) return true;
     return false;
   }
 
-  private boolean jj_3R_polinomio_182_5_8()
+  static private boolean jj_3_2()
+ {
+    if (jj_scan_token(NUM)) return true;
+    if (jj_scan_token(ID)) return true;
+    if (jj_scan_token(POT)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_polinomio_206_5_19()
  {
     Token xsp;
     xsp = jj_scanpos;
@@ -542,32 +644,97 @@ void condicional() throws ParseException {
     return false;
   }
 
-  private boolean jj_3_2()
+  static private boolean jj_3R_exp_arit_154_3_23()
  {
-    if (jj_scan_token(NUM)) return true;
-    if (jj_scan_token(ID)) return true;
+    if (jj_3R_termino_162_3_24()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_primario_196_5_17()
+ {
+    if (jj_3R_polinomio_206_5_19()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_primario_195_5_15()
+ {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_primario_195_5_16()) {
+    jj_scanpos = xsp;
+    if (jj_3R_primario_196_5_17()) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(20)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(21)) return true;
+    }
+    }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_primario_195_5_16()
+ {
+    if (jj_scan_token(PAR_A)) return true;
+    if (jj_3R_expresion_130_3_18()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_exp_rel_148_3_22()
+ {
+    if (jj_3R_exp_arit_154_3_23()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_exp_and_142_3_21()
+ {
+    if (jj_3R_exp_rel_148_3_22()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_potencia_178_14_12()
+ {
     if (jj_scan_token(POT)) return true;
     return false;
   }
 
-  private boolean jj_3_1()
+  static private boolean jj_3R_unario_187_5_14()
  {
-    if (jj_3R_polinomio_182_5_8()) return true;
+    if (jj_3R_primario_195_5_15()) return true;
     return false;
   }
 
+  static private boolean jj_3R_unario_186_5_13()
+ {
+    if (jj_scan_token(MENOS)) return true;
+    if (jj_3R_unario_186_5_11()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_unario_186_5_11()
+ {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_unario_186_5_13()) {
+    jj_scanpos = xsp;
+    if (jj_3R_unario_187_5_14()) return true;
+    }
+    return false;
+  }
+
+  static private boolean jj_initialized_once = false;
   /** Generated Token Manager. */
-  public PolinomiosTokenManager token_source;
-  SimpleCharStream jj_input_stream;
+  static public PolinomiosTokenManager token_source;
+  static SimpleCharStream jj_input_stream;
   /** Current token. */
-  public Token token;
+  static public Token token;
   /** Next token. */
-  public Token jj_nt;
-  private int jj_ntk;
-  private Token jj_scanpos, jj_lastpos;
-  private int jj_la;
-  private int jj_gen;
-  final private int[] jj_la1 = new int[18];
+  static public Token jj_nt;
+  static private int jj_ntk;
+  static private Token jj_scanpos, jj_lastpos;
+  static private int jj_la;
+  static private int jj_gen;
+  static final private int[] jj_la1 = new int[20];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -575,14 +742,14 @@ void condicional() throws ParseException {
 	   jj_la1_init_1();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x400000,0x0,0x8ffc80,0x8ffc80,0x80000000,0x40000000,0x0,0x0,0x6000000,0x6000000,0x18000000,0x18000000,0x300000,0x1800000,0xfe000,0x100,0x200,0x1800,};
+	   jj_la1_0 = new int[] {0x400000,0x0,0x8ffc80,0x8ffc80,0x80000000,0x40000000,0x0,0x0,0x6000000,0x6000000,0x18000000,0x18000000,0x20000000,0x5b00000,0x1b00000,0x1800000,0xfe000,0x100,0x200,0x1800,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x0,0x80,0x0,0x0,0x0,0x0,0x7e,0x7e,0x0,0x0,0x0,0x0,0x201,0x0,0x0,0x0,0x0,0x0,};
+	   jj_la1_1 = new int[] {0x0,0x80,0x0,0x0,0x0,0x0,0x7e,0x7e,0x0,0x0,0x0,0x0,0x0,0x200,0x200,0x0,0x0,0x0,0x0,0x0,};
 	}
-  final private JJCalls[] jj_2_rtns = new JJCalls[4];
-  private boolean jj_rescan = false;
-  private int jj_gc = 0;
+  static final private JJCalls[] jj_2_rtns = new JJCalls[4];
+  static private boolean jj_rescan = false;
+  static private int jj_gc = 0;
 
   /** Constructor with InputStream. */
   public Polinomios(java.io.InputStream stream) {
@@ -590,43 +757,57 @@ void condicional() throws ParseException {
   }
   /** Constructor with InputStream and supplied encoding */
   public Polinomios(java.io.InputStream stream, String encoding) {
+	 if (jj_initialized_once) {
+	   System.out.println("ERROR: Second call to constructor of static parser.  ");
+	   System.out.println("	   You must either use ReInit() or set the JavaCC option STATIC to false");
+	   System.out.println("	   during parser generation.");
+	   throw new Error();
+	 }
+	 jj_initialized_once = true;
 	 try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
 	 token_source = new PolinomiosTokenManager(jj_input_stream);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 18; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 20; i++) jj_la1[i] = -1;
 	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Reinitialise. */
-  public void ReInit(java.io.InputStream stream) {
+  static public void ReInit(java.io.InputStream stream) {
 	  ReInit(stream, null);
   }
   /** Reinitialise. */
-  public void ReInit(java.io.InputStream stream, String encoding) {
+  static public void ReInit(java.io.InputStream stream, String encoding) {
 	 try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
 	 token_source.ReInit(jj_input_stream);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 18; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 20; i++) jj_la1[i] = -1;
 	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Constructor. */
   public Polinomios(java.io.Reader stream) {
+	 if (jj_initialized_once) {
+	   System.out.println("ERROR: Second call to constructor of static parser. ");
+	   System.out.println("	   You must either use ReInit() or set the JavaCC option STATIC to false");
+	   System.out.println("	   during parser generation.");
+	   throw new Error();
+	 }
+	 jj_initialized_once = true;
 	 jj_input_stream = new SimpleCharStream(stream, 1, 1);
 	 token_source = new PolinomiosTokenManager(jj_input_stream);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 18; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 20; i++) jj_la1[i] = -1;
 	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Reinitialise. */
-  public void ReInit(java.io.Reader stream) {
+  static public void ReInit(java.io.Reader stream) {
 	if (jj_input_stream == null) {
 	   jj_input_stream = new SimpleCharStream(stream, 1, 1);
 	} else {
@@ -640,17 +821,24 @@ void condicional() throws ParseException {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 18; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 20; i++) jj_la1[i] = -1;
 	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Constructor with generated Token Manager. */
   public Polinomios(PolinomiosTokenManager tm) {
+	 if (jj_initialized_once) {
+	   System.out.println("ERROR: Second call to constructor of static parser. ");
+	   System.out.println("	   You must either use ReInit() or set the JavaCC option STATIC to false");
+	   System.out.println("	   during parser generation.");
+	   throw new Error();
+	 }
+	 jj_initialized_once = true;
 	 token_source = tm;
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 18; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 20; i++) jj_la1[i] = -1;
 	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -660,11 +848,11 @@ void condicional() throws ParseException {
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 18; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 20; i++) jj_la1[i] = -1;
 	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  private Token jj_consume_token(int kind) throws ParseException {
+  static private Token jj_consume_token(int kind) throws ParseException {
 	 Token oldToken;
 	 if ((oldToken = token).next != null) token = token.next;
 	 else token = token.next = token_source.getNextToken();
@@ -696,7 +884,7 @@ void condicional() throws ParseException {
     }
   }
   static private final LookaheadSuccess jj_ls = new LookaheadSuccess();
-  private boolean jj_scan_token(int kind) {
+  static private boolean jj_scan_token(int kind) {
 	 if (jj_scanpos == jj_lastpos) {
 	   jj_la--;
 	   if (jj_scanpos.next == null) {
@@ -719,7 +907,7 @@ void condicional() throws ParseException {
 
 
 /** Get the next Token. */
-  final public Token getNextToken() {
+  static final public Token getNextToken() {
 	 if (token.next != null) token = token.next;
 	 else token = token.next = token_source.getNextToken();
 	 jj_ntk = -1;
@@ -728,7 +916,7 @@ void condicional() throws ParseException {
   }
 
 /** Get the specific Token. */
-  final public Token getToken(int index) {
+  static final public Token getToken(int index) {
 	 Token t = token;
 	 for (int i = 0; i < index; i++) {
 	   if (t.next != null) t = t.next;
@@ -737,20 +925,20 @@ void condicional() throws ParseException {
 	 return t;
   }
 
-  private int jj_ntk_f() {
+  static private int jj_ntk_f() {
 	 if ((jj_nt=token.next) == null)
 	   return (jj_ntk = (token.next=token_source.getNextToken()).kind);
 	 else
 	   return (jj_ntk = jj_nt.kind);
   }
 
-  private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
-  private int[] jj_expentry;
-  private int jj_kind = -1;
-  private int[] jj_lasttokens = new int[100];
-  private int jj_endpos;
+  static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  static private int[] jj_expentry;
+  static private int jj_kind = -1;
+  static private int[] jj_lasttokens = new int[100];
+  static private int jj_endpos;
 
-  private void jj_add_error_token(int kind, int pos) {
+  static private void jj_add_error_token(int kind, int pos) {
 	 if (pos >= 100) {
 		return;
 	 }
@@ -789,14 +977,14 @@ void condicional() throws ParseException {
   }
 
   /** Generate ParseException. */
-  public ParseException generateParseException() {
+  static public ParseException generateParseException() {
 	 jj_expentries.clear();
 	 boolean[] la1tokens = new boolean[45];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
 	 }
-	 for (int i = 0; i < 18; i++) {
+	 for (int i = 0; i < 20; i++) {
 	   if (jj_la1[i] == jj_gen) {
 		 for (int j = 0; j < 32; j++) {
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -825,22 +1013,22 @@ void condicional() throws ParseException {
 	 return new ParseException(token, exptokseq, tokenImage);
   }
 
-  private boolean trace_enabled;
+  static private boolean trace_enabled;
 
 /** Trace enabled. */
-  final public boolean trace_enabled() {
+  static final public boolean trace_enabled() {
 	 return trace_enabled;
   }
 
   /** Enable tracing. */
-  final public void enable_tracing() {
+  static final public void enable_tracing() {
   }
 
   /** Disable tracing. */
-  final public void disable_tracing() {
+  static final public void disable_tracing() {
   }
 
-  private void jj_rescan_token() {
+  static private void jj_rescan_token() {
 	 jj_rescan = true;
 	 for (int i = 0; i < 4; i++) {
 	   try {
@@ -864,7 +1052,7 @@ void condicional() throws ParseException {
 	 jj_rescan = false;
   }
 
-  private void jj_save(int index, int xla) {
+  static private void jj_save(int index, int xla) {
 	 JJCalls p = jj_2_rtns[index];
 	 while (p.gen > jj_gen) {
 	   if (p.next == null) { p = p.next = new JJCalls(); break; }
