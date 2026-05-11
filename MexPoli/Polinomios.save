@@ -41,7 +41,7 @@ TOKEN : {
   | < TRUE: "true" >
   | < FALSE: "false" >
 
-  | < TIPO: "polinomio"| "8b" | "16s" | "16d" | "16c" | "1b" >
+  | < TIPO: "8b" | "16s" | "16d" | "16c" | "1b" >
 
   | < ID: ["a"-"z"] (["a"-"z","0"-"9"])* >
   | < NUM: (["0"-"9"])+ >

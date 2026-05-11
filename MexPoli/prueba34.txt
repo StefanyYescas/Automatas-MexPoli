@@ -1,0 +1,19 @@
+
+programa{
+inicio{
+    8b x;
+    8b y;
+   polinomio x = 2x + 1;
+}
+
+if(x > 5){
+    << x;
+}
+else{
+    << 0;
+}
+
+while(x < 10){
+    x = x + 1;
+}
+}
