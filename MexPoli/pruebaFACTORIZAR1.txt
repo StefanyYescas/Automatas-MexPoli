@@ -1,0 +1,8 @@
+programa {
+  inicio {
+    polinomio p = x^2 + 5x + 6;
+  }
+
+  factorizar(q);
+	<< q;
+}

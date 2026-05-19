@@ -1,5 +1,0 @@
-programa {
-inicio {
-}
-imprimir (x + 2);
-}

@@ -1,0 +1,7 @@
+programa {
+  inicio {
+    16s a;
+  }
+
+  a = 5 + 2 * 3;
+}

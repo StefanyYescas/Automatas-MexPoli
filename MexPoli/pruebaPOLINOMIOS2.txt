@@ -1,0 +1,7 @@
+programa {
+  inicio {
+    polinomio f;
+  }
+
+  f = 5x^3 - 4x^2 + x;
+}

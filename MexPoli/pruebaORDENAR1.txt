@@ -1,0 +1,8 @@
+programa {
+  inicio {
+    polinomio p = 2x + 5x^3 + x^2;
+  }
+
+  ordenar(p);
+  << p;
+}

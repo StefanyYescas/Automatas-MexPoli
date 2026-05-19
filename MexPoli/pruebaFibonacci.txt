@@ -1,0 +1,21 @@
+programa{
+inicio{
+	16d x = 1;
+	16d y = 1;
+	16d z;
+	16d i;
+	16d n;
+	}
+
+	>>n;
+	<<1 1;
+
+	while(i<n){
+	i=i+1;
+	z=x;
+	x=z+y;
+	y=z;	  
+	<<x;
+	}
+
+}

@@ -1,0 +1,9 @@
+programa {
+  inicio {
+	  8b x = 2; 
+  	 polinomio p = 3x^2 + 2x + 1;
+  
+ }
+
+  evaluar(p);
+}

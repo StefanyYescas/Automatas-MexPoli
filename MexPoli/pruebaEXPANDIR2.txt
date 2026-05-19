@@ -1,0 +1,8 @@
+programa {
+  inicio {
+    polinomio p = (x + 3)^2 ;
+  }
+
+  expandir(p);
+	<< p;
+}

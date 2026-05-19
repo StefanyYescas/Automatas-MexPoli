@@ -1,0 +1,7 @@
+programa {
+  inicio {
+    polinomio q = x + x^4 + x^2;
+  }
+
+  ordenar(q);
+}

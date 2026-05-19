@@ -1,0 +1,11 @@
+programa {
+  inicio {
+    1b estado;
+  }
+
+  estado = true;
+
+  if (estado) {
+    << estado;
+  }
+}

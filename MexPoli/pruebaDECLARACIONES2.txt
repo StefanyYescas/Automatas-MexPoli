@@ -1,0 +1,6 @@
+programa {
+  inicio {
+    polinomio p;
+    1b estado;
+  }
+}

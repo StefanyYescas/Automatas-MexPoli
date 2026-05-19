@@ -1,6 +1,0 @@
-
-programa {
-inicio {
-}
-x = -5;
-}

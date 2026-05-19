@@ -1,0 +1,7 @@
+programa {
+  inicio {
+    polinomio q;
+  }
+
+  q = 3x^2(x + 2)(x - 1);
+}

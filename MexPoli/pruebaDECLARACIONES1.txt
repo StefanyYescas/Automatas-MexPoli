@@ -1,0 +1,6 @@
+programa {
+  inicio {
+    8b a;
+    16d x;
+  }
+}

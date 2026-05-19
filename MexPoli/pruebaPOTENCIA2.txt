@@ -1,0 +1,7 @@
+programa {
+  inicio {
+    16d y;
+  }
+
+  y = 2^3;
+}

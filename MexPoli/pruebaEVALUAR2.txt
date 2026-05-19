@@ -1,0 +1,8 @@
+programa {
+  inicio {
+    polinomio q = x^3 - 2x;
+ 	8b x = 2; 
+}
+
+  evaluar(q);
+}

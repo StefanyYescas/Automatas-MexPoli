@@ -1,0 +1,9 @@
+programa {
+  inicio {
+    polinomio p;
+
+  }
+
+  p = 3x^2 + 2x + 1;
+	<< p;
+}

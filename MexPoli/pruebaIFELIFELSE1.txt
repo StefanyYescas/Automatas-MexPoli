@@ -1,0 +1,17 @@
+programa {
+  inicio {
+    16d x;
+  }
+
+  x = 0;
+
+  if (x > 0) {
+    << x;
+  }
+  elif (x == 0) {
+    << 0;
+  }
+  else {
+    >> x;
+  }
+}

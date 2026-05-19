@@ -9,17 +9,7 @@ public class Polinomios {
             Polinomios parser = new Polinomios(System.in);
             parser.programa();
 
-            
-		System.out.println("      ANALISIS       ");
-
-		System.out.println("\nEl programa cumple con las reglas del lenguaje.");
-
-		System.out.println("\nValidaciones realizadas:");
-		System.out.println("→ Analisis lexico      [ OK ]");
-		System.out.println("→ Analisis sintactico  [ OK ]");
-		System.out.println("→ Verificacion general [ OK ]");
-
-		System.out.println("\nNo se encontraron errores.\n");
+            System.out.println("\nPrograma sintacticamente correcto");
 
         }
 
@@ -83,7 +73,7 @@ public class Polinomios {
 
             try {
 
-               
+                // ===== LINEA =====
                 int inicioLinea = mensaje.indexOf("line ");
                 int finLinea = mensaje.indexOf(",", inicioLinea);
 
@@ -234,9 +224,7 @@ void programa() :
 void inicio() :
 {}
 {
-    <INICIO>
-    <LLAVE_A>
-    declaraciones()
+    <INICIO> <LLAVE_A> declaraciones()
     <LLAVE_C>
 }
 
@@ -291,7 +279,7 @@ void instruccion() :
 }
 
 
-//  ASIGNACION 
+// ===== ASIGNACION =====
 
 void asignacion() :
 {}

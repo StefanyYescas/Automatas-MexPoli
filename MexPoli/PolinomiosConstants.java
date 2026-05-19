@@ -21,73 +21,69 @@ public interface PolinomiosConstants {
   /** RegularExpression Id. */
   int WHILE = 10;
   /** RegularExpression Id. */
-  int RETURN = 11;
+  int REDUCIR = 11;
   /** RegularExpression Id. */
-  int STOP = 12;
+  int EVALUAR = 12;
   /** RegularExpression Id. */
-  int REDUCIR = 13;
+  int EXPANDIR = 13;
   /** RegularExpression Id. */
-  int EVALUAR = 14;
+  int FACTORIZAR = 14;
   /** RegularExpression Id. */
-  int EXPANDIR = 15;
+  int ORDENAR = 15;
   /** RegularExpression Id. */
-  int FACTORIZAR = 16;
+  int LEER = 16;
   /** RegularExpression Id. */
-  int ORDENAR = 17;
+  int IMPRIMIR = 17;
   /** RegularExpression Id. */
-  int LEER = 18;
+  int TRUE = 18;
   /** RegularExpression Id. */
-  int IMPRIMIR = 19;
+  int FALSE = 19;
   /** RegularExpression Id. */
-  int TRUE = 20;
+  int TIPO = 20;
   /** RegularExpression Id. */
-  int FALSE = 21;
+  int ID = 21;
   /** RegularExpression Id. */
-  int TIPO = 22;
+  int NUM = 22;
   /** RegularExpression Id. */
-  int ID = 23;
+  int MAS = 23;
   /** RegularExpression Id. */
-  int NUM = 24;
+  int MENOS = 24;
   /** RegularExpression Id. */
-  int MAS = 25;
+  int MUL = 25;
   /** RegularExpression Id. */
-  int MENOS = 26;
+  int DIV = 26;
   /** RegularExpression Id. */
-  int MUL = 27;
+  int POT = 27;
   /** RegularExpression Id. */
-  int DIV = 28;
+  int AND = 28;
   /** RegularExpression Id. */
-  int POT = 29;
+  int OR = 29;
   /** RegularExpression Id. */
-  int AND = 30;
+  int NOT = 30;
   /** RegularExpression Id. */
-  int OR = 31;
+  int MAYORIG = 31;
   /** RegularExpression Id. */
-  int NOT = 32;
+  int MENORIG = 32;
   /** RegularExpression Id. */
-  int MAYORIG = 33;
+  int IGUAL = 33;
   /** RegularExpression Id. */
-  int MENORIG = 34;
+  int DIF = 34;
   /** RegularExpression Id. */
-  int IGUAL = 35;
+  int MAYOR = 35;
   /** RegularExpression Id. */
-  int DIF = 36;
+  int MENOR = 36;
   /** RegularExpression Id. */
-  int MAYOR = 37;
+  int ASIG = 37;
   /** RegularExpression Id. */
-  int MENOR = 38;
+  int PYC = 38;
   /** RegularExpression Id. */
-  int ASIG = 39;
+  int PAR_A = 39;
   /** RegularExpression Id. */
-  int PYC = 40;
+  int PAR_C = 40;
   /** RegularExpression Id. */
-  int PAR_A = 41;
+  int LLAVE_A = 41;
   /** RegularExpression Id. */
-  int PAR_C = 42;
-  /** RegularExpression Id. */
-  int LLAVE_A = 43;
-  /** RegularExpression Id. */
-  int LLAVE_C = 44;
+  int LLAVE_C = 42;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -105,8 +101,6 @@ public interface PolinomiosConstants {
     "\"elif\"",
     "\"else\"",
     "\"while\"",
-    "\"return\"",
-    "\"stop\"",
     "\"reducir\"",
     "\"evaluar\"",
     "\"expandir\"",

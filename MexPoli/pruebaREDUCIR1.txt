@@ -1,0 +1,9 @@
+
+programa {
+  inicio {
+    polinomio p = 2x + 4x;
+  }
+
+  reducir(p);
+	<<p;
+}

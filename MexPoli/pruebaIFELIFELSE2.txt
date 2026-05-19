@@ -1,0 +1,17 @@
+programa {
+  inicio {
+    8b y;
+  }
+
+  y = 2;
+
+  if (y > 5) {
+    << y;
+  }
+  elif (y == 2) {
+    << y;
+  }
+  else {
+    >> y;
+  }
+}

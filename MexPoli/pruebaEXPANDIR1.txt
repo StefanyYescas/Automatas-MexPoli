@@ -1,0 +1,8 @@
+
+programa {
+  inicio {
+    polinomio p;
+  }
+
+  expandir((x + 1)(x + 2));
+}

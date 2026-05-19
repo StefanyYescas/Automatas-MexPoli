@@ -1,0 +1,11 @@
+programa {
+  inicio {
+    8b y;
+  }
+
+  y = 3;
+
+  if (y <= 8) {
+    << y;
+  }
+}

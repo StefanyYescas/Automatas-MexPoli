@@ -1,0 +1,9 @@
+programa {
+  inicio {
+    polinomio q = 3x^2 + 2x^2;
+  }
+
+  reducir(q);
+	
+	<<q;
+}

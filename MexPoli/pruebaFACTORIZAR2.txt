@@ -1,0 +1,7 @@
+programa {
+  inicio {
+    polinomio q = x^2 - 9;
+  }
+
+  factorizar(q);
+}

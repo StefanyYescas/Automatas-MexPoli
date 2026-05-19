@@ -1,0 +1,11 @@
+programa {
+  inicio {
+    16d x;
+  }
+
+  x = 7;
+
+  if (x > 5) {
+    << x;
+  }
+}
