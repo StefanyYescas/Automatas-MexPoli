@@ -1,20 +1,17 @@
-options {
-  STATIC = false;
-}
-
 PARSER_BEGIN(Polinomios)
 
 public class Polinomios {
   public static void main(String[] args) throws ParseException {
     Polinomios parser = new Polinomios(System.in);
     parser.programa();
-    System.out.println("Programa sintácticamente correcto ✅");
+    System.out.println("Programa sintacticamente correcto");
   }
 }
 
 PARSER_END(Polinomios)
 
 
+// ESPACIOS
 // ESPACIOS
 SKIP : {
   " " | "\t" | "\n" | "\r"
@@ -29,8 +26,6 @@ TOKEN : {
   | < ELIF: "elif" >
   | < ELSE: "else" >
   | < WHILE: "while" >
-  | < RETURN: "return" >
-  | < STOP: "stop" >
 
   | < REDUCIR: "reducir" >
   | < EVALUAR: "evaluar" >
@@ -44,7 +39,7 @@ TOKEN : {
   | < TRUE: "true" >
   | < FALSE: "false" >
 
-  | < TIPO: "8b" | "16s" | "16d" | "16c" | "1b" >
+  | < TIPO: "polinomio"| "8b" | "16s" | "16d" | "16c" | "1b" >
 
   | < ID: ["a"-"z"] (["a"-"z","0"-"9"])* >
   | < NUM: (["0"-"9"])+ >
@@ -59,12 +54,12 @@ TOKEN : {
   | < OR: "||" >
   | < NOT: "!" >
 
-  | < MAYOR: ">" >
-  | < MENOR: "<" >
   | < MAYORIG: ">=" >
   | < MENORIG: "<=" >
   | < IGUAL: "==" >
   | < DIF: "!=" >
+  | < MAYOR: ">" >
+  | < MENOR: "<" >
 
   | < ASIG: "=" >
 
@@ -75,13 +70,12 @@ TOKEN : {
   | < LLAVE_C: "}" >
 }
 
-
-// PARSER
+// ================= PARSER =================
 
 void programa() :
 {}
 {
-  <PROGRAMA> <LLAVE_A> inicio() instrucciones() <LLAVE_C>
+  <PROGRAMA> <LLAVE_A> inicio() instrucciones() <LLAVE_C> exp<EOF>
 }
 
 void inicio() :
@@ -115,7 +109,6 @@ void instruccion() :
   | funcion()
   | condicional()
   | ciclo()
-  | retorno()
 }
 
 void asignacion() :
@@ -125,7 +118,8 @@ void asignacion() :
 }
 
 
-// EXPRESIONES
+
+// ================= EXPRESIONES =================
 
 void expresion() :
 {}
@@ -158,51 +152,77 @@ void exp_arit() :
 }
 
 
-//  CLAVE: AQUÍ SE RECONOCEN LOS POLINOMIOS
+//  NUEVO DISEÑO DE MULTIPLICACIÓN
 void termino() :
 {}
 {
-  factor() ( ( <MUL> | <DIV> ) factor() )*
+  factorMultiplicativo() ( ( <MUL> | <DIV> ) factorMultiplicativo() )*
 }
 
-void factor() :
+
+// SOPORTA: 2x(x+1)(x+2)(x+3)
+void factorMultiplicativo() :
 {}
 {
-    LOOKAHEAD(3) polinomio()
-  | <PAR_A> expresion() <PAR_C>
-  | <NOT> factor()
+  potencia() ( LOOKAHEAD(2) potencia() )*
+}
+
+//  POTENCIAS
+void potencia() :
+{}
+{
+  unario() ( <POT> unario() )*
+}
+
+
+//  NEGATIVOS
+void unario() :
+{}
+{
+    <MENOS> unario()
+  | primario()
+}
+
+
+//  PRIMARIO
+void primario() :
+{}
+{
+    <PAR_A> expresion() <PAR_C>
+  | polinomio()
   | <TRUE>
   | <FALSE>
-}                                                                                   
+}
 
-//  POLINOMIOS (SIN AMBIGÜEDAD)
+//  POLINOMIOS
 void polinomio() :
 {}
 {
-    LOOKAHEAD(3) <NUM> <ID> <POT> <NUM>   // 3x^2
-  | LOOKAHEAD(2) <NUM> <ID>               // 3x
-  | LOOKAHEAD(2) <ID> <POT> <NUM>         // x^2
-  | <ID>                                  // x
-  | <NUM>                                 // 5
+    LOOKAHEAD(3) <NUM> <ID> <POT> <NUM>
+  | LOOKAHEAD(2) <NUM> <ID>
+  | LOOKAHEAD(3) <ID> <POT> <NUM>
+  | <ID>
+  | <NUM>
 }
 
 
-// FUNCIONES
+// ================= FUNCIONES =================
 
 void funcion() :
 {}
 {
     <LEER> <ID> <PYC>
-  | <IMPRIMIR> <ID> <PYC>
-  | <REDUCIR> <PAR_A> <ID> <PAR_C> <PYC>
-  | <EVALUAR> <PAR_A> <ID> <PAR_C> <PYC>
-  | <EXPANDIR> <PAR_A> <ID> <PAR_C> <PYC>
-  | <FACTORIZAR> <PAR_A> <ID> <PAR_C> <PYC>
-  | <ORDENAR> <PAR_A> <ID> <PAR_C> <PYC>
+  | <IMPRIMIR> expresion() <PYC>
+  | <REDUCIR> <PAR_A> expresion() <PAR_C> <PYC>
+  | <EVALUAR> <PAR_A> expresion() <PAR_C> <PYC>
+  | <EXPANDIR> <PAR_A> expresion() <PAR_C> <PYC>
+  | <FACTORIZAR> <PAR_A> expresion() <PAR_C> <PYC>
+  | <ORDENAR> <PAR_A> expresion() <PAR_C> <PYC>
 }
 
 
-// CONTROL
+
+// ================= CONTROL =================
 
 void condicional() :
 {}
@@ -216,11 +236,4 @@ void ciclo() :
 {}
 {
   <WHILE> <PAR_A> expresion() <PAR_C> bloque()
-}
-
-void retorno() :
-{}
-{
-    <RETURN> expresion() <PYC>
-  | <STOP> <PYC>
 }

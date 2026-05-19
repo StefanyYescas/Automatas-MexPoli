@@ -1,0 +1,19 @@
+programa {
+
+inicio{
+16d x;
+polinomio p;
+1b verdad;
+}
+
+x = (x+8)*4;
+
+p = 5x^4;
+p = 3x;
+p = x^7;
+p = x;
+p = 2;
+
+verdad = false;
+verdad = true;
+}

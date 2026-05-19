@@ -1,0 +1,26 @@
+programa {
+
+inicio{
+16d x;
+}
+
+
+
+	while(x < 100){
+	
+		if(x==0){
+		x = x + 1;
+	
+		}elif(x>=50 && x<99){
+		x = x + 2;
+	
+		}else{
+		x = x + 4;
+
+		}
+	
+	}
+
+
+
+}

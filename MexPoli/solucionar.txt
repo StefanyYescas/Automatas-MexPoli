@@ -1,0 +1,9 @@
+programa {
+
+inicio{
+16d x;
+polinomio p;
+}
+
+p = 2x(x+1)+3x^4/2;
+}
